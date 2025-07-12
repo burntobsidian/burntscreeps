@@ -60,10 +60,14 @@ try {
 		presets: [
 			["@babel/preset-env", {
 				targets: {
-					node: "12" // Screeps supports roughly Node 12 features
+					ie: "11" // Maximum compatibility for Screeps
 				},
-				modules: "cjs"
+				modules: "cjs",
+				forceAllTransforms: true
 			}]
+		],
+		plugins: [
+			"@babel/plugin-transform-parameters"
 		],
 		minified: isProduction,
 		compact: isProduction

@@ -16,6 +16,7 @@
 	},
 	"devDependencies": {
 		"@babel/core": "^7.28.0",
+		"@babel/plugin-transform-parameters": "^7.27.7",
 		"@babel/preset-env": "^7.28.0",
 		"@types/bun": "latest",
 		"@types/screeps": "^3.3.8",

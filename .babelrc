@@ -4,10 +4,14 @@
       "@babel/preset-env",
       {
         "targets": {
-          "node": "12"
+          "ie": "11"
         },
-        "modules": "cjs"
+        "modules": "cjs",
+        "forceAllTransforms": true
       }
     ]
+  ],
+  "plugins": [
+    "@babel/plugin-transform-parameters"
   ]
 }
