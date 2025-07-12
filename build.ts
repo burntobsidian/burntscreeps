@@ -6,4 +6,5 @@ await Bun.build({
 	target: "node",
 	plugins: [screepsPlugin()],
 	minify: true,
+	sourcemap: "external",
 });
