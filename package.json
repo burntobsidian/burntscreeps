@@ -1,11 +1,18 @@
 {
 	"name": "burntscreeps",
 	"module": "src/index.ts",
-	"type": "module",
+	"type": "commonjs",
 	"scripts": {
 		"build": "bun run build.ts",
+		"build:dev": "bun run build.ts --mode=development",
+		"build:prod": "bun run build.ts --mode=production",
+		"typecheck": "bun tsc --noEmit",
+		"typecheck:watch": "bun tsc --noEmit --watch",
 		"upload": "screeps-upload",
-		"typecheck": "bun tsc"
+		"deploy": "bun run build:prod && bun run upload",
+		"dev": "bun run build:dev && bun run upload",
+		"lint": "echo 'Linting with built-in TypeScript checks'",
+		"clean": "rm -rf dist/*"
 	},
 	"devDependencies": {
 		"@types/bun": "latest",

@@ -1,27 +1,50 @@
 {
   "compilerOptions": {
-    // Enable latest features
-    "lib": ["ESNext", "DOM"],
-    "target": "ESNext",
-    "module": "ESNext",
-    "moduleDetection": "force",
-    "jsx": "react-jsx",
-    "allowJs": true,
-
-    // Bundler mode
-    "moduleResolution": "bundler",
-    "allowImportingTsExtensions": true,
-    "verbatimModuleSyntax": true,
-    "noEmit": true,
-
-    // Best practices
+    // Target ES2018 for Screeps compatibility (supports optional chaining)
+    "target": "ES2018",
+    "module": "commonjs",
+    "lib": ["ES2018"],
+    
+    // Module resolution for Node.js compatibility
+    "moduleResolution": "node",
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    
+    // Strict type checking for better code quality
     "strict": true,
+    "noImplicitAny": true,
+    "strictNullChecks": true,
+    "strictFunctionTypes": true,
+    
+    // Output configuration optimized for Screeps
+    "outDir": "./dist",
+    "declaration": false,
+    "sourceMap": false,
+    "removeComments": true,
+    
+    // Advanced TypeScript options
     "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "downlevelIteration": true,
+    "allowJs": true,
     "noFallthroughCasesInSwitch": true,
-
-    // Some stricter flags (disabled by default)
-    "noUnusedLocals": false,
-    "noUnusedParameters": false,
-    "noPropertyAccessFromIndexSignature": false
-  }
+    
+    // Screeps-specific optimizations
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    
+    // Type definitions
+    "types": [
+      "bun-types",
+      "@types/screeps"
+    ]
+  },
+  "include": [
+    "src/**/*"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist",
+    "build.ts"
+  ]
 }
