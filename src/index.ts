@@ -75,7 +75,7 @@ export const loop = (): void => {
     for (const roomName in Game.rooms) {
       const room = Game.rooms[roomName];
       
-      if (room.controller && room.controller.my) {
+      if (room.controller?.my) {
         RoomIntelligence.analyze(room);
         ConstructionManager.run(room);
         SpawnManager.run(room);

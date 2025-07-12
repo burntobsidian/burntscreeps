@@ -1,4 +1,6 @@
 import { screepsPlugin } from "bun-plugin-screeps";
+import { spawn } from "child_process";
+import { readFileSync, writeFileSync } from "fs";
 
 // Determine build mode from command line arguments
 const args = process.argv.slice(2);
@@ -7,17 +9,18 @@ const isProduction = args.includes("--mode=production") || !isDevelopment;
 
 console.log(`🚀 Building Screeps code in ${isDevelopment ? 'development' : 'production'} mode...`);
 
+// First, build with Bun to handle TypeScript and bundling
 const result = await Bun.build({
 	entrypoints: ["./src/main.ts"],
 	outdir: "./dist",
 	target: "node",
 	format: "cjs",
 	
-	// Screeps-specific configuration
+	// Screeps-specific configuration  
 	plugins: [screepsPlugin()],
 	
 	// Dynamic optimization based on mode
-	minify: isProduction,
+	minify: false, // We'll handle minification after Babel
 	splitting: false,
 	sourcemap: isDevelopment ? "external" : "none",
 	
@@ -43,21 +46,49 @@ if (!result.success) {
 		console.error(message);
 	}
 	process.exit(1);
-} else {
-	console.log("✅ Build successful!");
-	console.log(`📦 Generated: ${result.outputs.length} files`);
-	for (const output of result.outputs) {
-		const file = Bun.file(output.path);
+}
+
+console.log("✅ Bun build successful!");
+console.log("🔄 Running Babel transpilation for Screeps compatibility...");
+
+// Read the built file and transpile with Babel
+try {
+	const babel = await import("@babel/core");
+	const inputCode = readFileSync("./dist/main.js", "utf8");
+	
+	const transpileResult = await babel.transformAsync(inputCode, {
+		presets: [
+			["@babel/preset-env", {
+				targets: {
+					node: "12" // Screeps supports roughly Node 12 features
+				},
+				modules: "cjs"
+			}]
+		],
+		minified: isProduction,
+		compact: isProduction
+	});
+	
+	if (transpileResult?.code) {
+		writeFileSync("./dist/main.js", transpileResult.code);
+		console.log("✅ Babel transpilation successful!");
+		
+		const file = Bun.file("./dist/main.js");
 		const size = file.size;
-		console.log(`   - ${output.path} (${(size / 1024).toFixed(1)}KB)`);
-	}
-	
-	if (isDevelopment) {
-		console.log("🔧 Development build includes source maps for debugging");
+		console.log(`📦 Final output: ./dist/main.js (${(size / 1024).toFixed(1)}KB)`);
+		
+		if (isDevelopment) {
+			console.log("🔧 Development build with source maps");
+		} else {
+			console.log("⚡ Production build optimized and minified");
+		}
+		
+		console.log(`\n🎯 Ready to deploy to Screeps!`);
+		console.log(`   Modern TypeScript -> ES5 compatible JavaScript`);
 	} else {
-		console.log("⚡ Production build optimized for performance");
+		throw new Error("Babel transpilation failed");
 	}
-	
-	console.log(`\n🎯 Ready to deploy to Screeps!`);
-	console.log(`   Copy the contents of: ./dist/main.js`);
+} catch (error) {
+	console.error("❌ Babel transpilation failed:", error);
+	process.exit(1);
 }

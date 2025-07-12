@@ -1,9 +1,9 @@
 {
   "compilerOptions": {
-    // Target ES2018 for Screeps compatibility (supports optional chaining)
-    "target": "ES2018",
+    // Target ES2020 for modern syntax support, Bun will transpile for Screeps
+    "target": "ES2020",
     "module": "commonjs",
-    "lib": ["ES2018"],
+    "lib": ["ES2020"],
     
     // Module resolution for Node.js compatibility
     "moduleResolution": "node",
